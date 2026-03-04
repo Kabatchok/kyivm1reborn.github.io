@@ -1,1 +1,1301 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kyiv M1 Reborn — Portal</title>
+  <meta name="description" content="Kyiv M1 Reborn — офіційний портал, новини, магазин, профіль." />
+  <style>
+    :root{
+      --bg:#0b0f12;
+      --card:#10171c;
+      --card2:#0e1418;
+      --text:#e9f0f3;
+      --muted:#a8b6be;
+      --green:#63d35d;
+      --green2:#2fbf64;
+      --lime:#a7ff66;
+      --stroke:rgba(255,255,255,.10);
+      --stroke2:rgba(255,255,255,.06);
+      --shadow: 0 18px 50px rgba(0,0,0,.55);
+      --radius: 22px;
+      --radius2: 16px;
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --max: 1160px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
 
+    /* base */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(99,211,93,.24), transparent 60%),
+        radial-gradient(900px 500px at 10% 10%, rgba(47,191,100,.16), transparent 60%),
+        radial-gradient(800px 600px at 70% 110%, rgba(167,255,102,.10), transparent 60%),
+        linear-gradient(180deg, #070a0c, #0b0f12);
+      overflow-x:hidden;
+    }
+    a{color:inherit; text-decoration:none}
+    button{font-family:inherit}
+    .container{max-width:var(--max); margin:0 auto; padding:0 18px}
+
+    /* topbar */
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(11,15,18,.78), rgba(11,15,18,.42));
+      border-bottom: 1px solid var(--stroke2);
+    }
+    .topbar-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      height:72px;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; cursor:pointer;
+      user-select:none;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:12px;
+      background:
+        radial-gradient(12px 12px at 70% 35%, rgba(255,255,255,.45), transparent 60%),
+        linear-gradient(135deg, rgba(99,211,93,1), rgba(47,191,100,1));
+      box-shadow: 0 14px 30px rgba(47,191,100,.22);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-60%;
+      background: conic-gradient(from 120deg, transparent, rgba(255,255,255,.22), transparent);
+      animation: spin 5.5s linear infinite;
+      opacity:.7;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brand strong{font-size:14px; letter-spacing:.5px}
+    .brand span{display:block; font-size:12px; color:var(--muted); margin-top:1px}
+
+    .nav{
+      display:flex; align-items:center; gap:10px;
+      padding:8px;
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--stroke2);
+      border-radius: 999px;
+    }
+    .nav a{
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:13px;
+      color:var(--muted);
+      transition: transform .2s var(--ease), background .2s var(--ease), color .2s var(--ease);
+      outline:none;
+    }
+    .nav a:hover{background: rgba(99,211,93,.10); color:var(--text); transform: translateY(-1px)}
+    .nav a.active{background: rgba(99,211,93,.16); color:var(--text)}
+
+    .actions{display:flex; align-items:center; gap:10px}
+    .chip{
+      display:flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:13px;
+      cursor:pointer;
+      transition: transform .18s var(--ease), background .18s var(--ease), border-color .18s var(--ease);
+    }
+    .chip:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.10)}
+    .btn{
+      border:0; cursor:pointer;
+      padding:10px 14px;
+      border-radius: 999px;
+      font-weight:700;
+      letter-spacing:.2px;
+      background: linear-gradient(135deg, var(--green), var(--green2));
+      color:#06210d;
+      box-shadow: 0 16px 30px rgba(47,191,100,.18);
+      transition: transform .18s var(--ease), filter .18s var(--ease);
+    }
+    .btn:hover{transform: translateY(-1px); filter:saturate(1.05)}
+    .btn:active{transform: translateY(0px) scale(.99)}
+    .btn.secondary{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border:1px solid var(--stroke2);
+      box-shadow:none;
+      font-weight:600;
+    }
+
+    /* layout */
+    .page{display:none}
+    .page.active{display:block}
+
+    /* hero (inspired layout) */
+    .hero{
+      padding: 36px 0 10px;
+    }
+    .hero-card{
+      position:relative;
+      border-radius: calc(var(--radius) + 14px);
+      border:1px solid var(--stroke2);
+      background:
+        radial-gradient(800px 380px at 78% 35%, rgba(99,211,93,.18), transparent 60%),
+        radial-gradient(600px 380px at 20% 20%, rgba(255,255,255,.06), transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      padding: 28px;
+      min-height: 420px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+    }
+    .hero-left{
+      display:flex; flex-direction:column; justify-content:center;
+      gap: 14px;
+      padding: 6px 4px;
+    }
+    .kicker{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(99,211,93,.22);
+      background: rgba(99,211,93,.10);
+      color: #dfffe4;
+      font-size:12px;
+      width: fit-content;
+      animation: floaty 3.2s var(--ease) infinite;
+    }
+    @keyframes floaty{
+      0%,100%{transform: translateY(0)}
+      50%{transform: translateY(-3px)}
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(30px, 4.2vw, 52px);
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 15px;
+      line-height:1.6;
+      max-width: 54ch;
+    }
+    .hero-cta{display:flex; flex-wrap:wrap; gap:10px; margin-top: 4px}
+    .hero-cta .btn{padding:12px 16px}
+    .meta-row{
+      display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px;
+    }
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.22);
+      color: var(--muted);
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .18s var(--ease), background .18s var(--ease);
+    }
+    .pill:hover{transform: translateY(-1px); background: rgba(255,255,255,.05)}
+    .dot{width:8px; height:8px; border-radius:99px; background: var(--green)}
+    .dot.orange{background:#ffb347}
+    .dot.blue{background:#5dd2ff}
+
+    .hero-right{
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
+    }
+    .orb{
+      width: 320px; height: 320px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(110px 110px at 35% 30%, rgba(255,255,255,.22), transparent 60%),
+        radial-gradient(150px 150px at 70% 65%, rgba(167,255,102,.18), transparent 60%),
+        radial-gradient(260px 260px at 50% 55%, rgba(99,211,93,.18), rgba(47,191,100,.12), rgba(0,0,0,.0));
+      box-shadow: 0 40px 90px rgba(47,191,100,.18);
+      position:relative;
+      transform: translateZ(0);
+      animation: orb 7s var(--ease) infinite;
+      cursor:pointer;
+    }
+    @keyframes orb{
+      0%,100%{transform: translateY(0) rotate(-2deg)}
+      50%{transform: translateY(-10px) rotate(2deg)}
+    }
+    .orb:before{
+      content:"";
+      position:absolute; inset:-2px;
+      border-radius:999px;
+      background: conic-gradient(from 0deg, rgba(99,211,93,.35), rgba(255,255,255,.08), rgba(47,191,100,.25), rgba(255,255,255,.06), rgba(99,211,93,.35));
+      filter: blur(10px);
+      opacity:.55;
+      z-index:-1;
+      animation: spin 8s linear infinite;
+    }
+    .orb-inner{
+      position:absolute; inset: 18px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(220px 220px at 40% 35%, rgba(255,255,255,.11), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.35));
+      display:flex; align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+    .orb-inner .badge{
+      text-align:center;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.26);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    .badge strong{display:block; font-size:14px; letter-spacing:.4px}
+    .badge span{display:block; color:var(--muted); font-size:12px; margin-top:3px}
+
+    .leaf{
+      position:absolute;
+      width: 14px; height: 14px;
+      border-radius: 6px 14px 6px 14px;
+      background: rgba(99,211,93,.8);
+      filter: blur(.2px);
+      opacity:.55;
+      animation: drift 9s var(--ease) infinite;
+    }
+    .leaf:nth-child(1){left: 8%; top: 18%; animation-delay: -1s}
+    .leaf:nth-child(2){left: 24%; top: 76%; width:10px; height:10px; animation-delay: -4s; opacity:.4}
+    .leaf:nth-child(3){left: 88%; top: 26%; width:12px; height:12px; animation-delay: -6s}
+    @keyframes drift{
+      0%,100%{transform: translate(0,0) rotate(0deg)}
+      50%{transform: translate(14px,-10px) rotate(14deg)}
+    }
+
+    /* sections */
+    .section{padding: 18px 0 34px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card{
+      grid-column: span 4;
+      border-radius: var(--radius);
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      padding: 16px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+      cursor:pointer;
+      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+      position:relative;
+      overflow:hidden;
+      min-height: 140px;
+    }
+    .card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(99,211,93,.24);
+      background: linear-gradient(180deg, rgba(99,211,93,.10), rgba(255,255,255,.02));
+    }
+    .card h3{margin: 0 0 8px; font-size: 16px}
+    .card p{margin:0; color:var(--muted); font-size: 13px; line-height:1.55}
+    .card .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      margin-top: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke2);
+      background: rgba(0,0,0,.22);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .shine{
+      position:absolute; inset:-60%;
+      background: conic-gradient(from 120deg, transparent, rgba(255,255,255,.16), transparent);
+      opacity:0;
+      transition: opacity .2s var(--ease);
+      animation: spin 8s linear infinite;
+    }
+    .card:hover .shine{opacity:.55}
+
+    /* dashboard */
+    .dash{
+      padding: 22px 0 40px;
+    }
+    .panel{
+      border-radius: calc(var(--radius) + 8px);
+      border:1px solid var(--stroke2);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .panel-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 16px 16px;
+      border-bottom:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+    }
+    .panel-head strong{font-size:14px}
+    .panel-body{padding: 16px}
+    .row{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+    .box{
+      border-radius: var(--radius);
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+      padding: 14px;
+      min-height: 160px;
+    }
+    .box h4{margin:0 0 8px; font-size:14px}
+    .list{display:flex; flex-direction:column; gap:8px}
+    .item{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      transition: transform .16s var(--ease), background .16s var(--ease);
+    }
+    .item:hover{transform: translateY(-1px); background: rgba(99,211,93,.08)}
+    .item small{color:var(--muted)}
+    .kbd{
+      font-size:11px; color: #b8ffc4;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border:1px solid rgba(99,211,93,.22);
+      background: rgba(99,211,93,.10);
+    }
+
+    /* modal auth */
+    .backdrop{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.62);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 18px;
+      z-index: 100;
+    }
+    .backdrop.show{display:flex}
+    .modal{
+      width: min(920px, 100%);
+      border-radius: calc(var(--radius) + 12px);
+      border:1px solid var(--stroke2);
+      background:
+        radial-gradient(900px 420px at 90% 25%, rgba(99,211,93,.18), transparent 60%),
+        linear-gradient(180deg, rgba(16,23,28,.92), rgba(12,17,20,.92));
+      box-shadow: 0 40px 120px rgba(0,0,0,.7);
+      overflow:hidden;
+      transform: translateY(10px) scale(.98);
+      opacity:0;
+      transition: transform .22s var(--ease), opacity .22s var(--ease);
+    }
+    .backdrop.show .modal{transform: translateY(0) scale(1); opacity:1}
+    .modal-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 420px;
+    }
+    .modal-left{
+      padding: 18px;
+      border-right:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+    }
+    .modal-right{padding: 18px}
+    .modal-left h2{margin:6px 0 10px; font-size:18px}
+    .modal-left p{margin:0; color:var(--muted); font-size:13px; line-height:1.6}
+    .features{
+      margin-top: 14px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .feat{
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 12px;
+      display:flex; gap:10px;
+      cursor:pointer;
+      transition: transform .16s var(--ease), background .16s var(--ease);
+    }
+    .feat:hover{transform: translateY(-1px); background: rgba(99,211,93,.08)}
+    .feat b{display:block; font-size:13px}
+    .feat span{display:block; font-size:12px; color:var(--muted); margin-top:3px}
+    .icon{
+      width:34px; height:34px; border-radius: 12px;
+      background: rgba(99,211,93,.14);
+      border:1px solid rgba(99,211,93,.22);
+      display:flex; align-items:center; justify-content:center;
+      color:#b8ffc4;
+      flex:0 0 auto;
+    }
+
+    .tabs{display:flex; gap:8px; margin-bottom: 12px}
+    .tab{
+      flex:1;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor:pointer;
+      font-weight:700;
+      transition: background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease);
+    }
+    .tab:hover{transform: translateY(-1px)}
+    .tab.active{
+      background: rgba(99,211,93,.14);
+      color: var(--text);
+      border-color: rgba(99,211,93,.22);
+    }
+
+    .form{display:flex; flex-direction:column; gap:10px}
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+    }
+    label{font-size:12px; color: var(--muted)}
+    input{
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      transition: border-color .16s var(--ease), transform .16s var(--ease);
+    }
+    input:focus{border-color: rgba(99,211,93,.28)}
+    .help{
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.5;
+    }
+    .rowbtn{display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+    .danger{
+      color:#ffb3b3;
+      font-size:12px;
+      display:none;
+      border:1px solid rgba(255,120,120,.22);
+      background: rgba(255,120,120,.08);
+      padding: 10px 12px;
+      border-radius: 14px;
+    }
+    .danger.show{display:block}
+
+    /* toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events:none;
+      z-index: 999;
+      padding: 12px 14px;
+      border-radius: 999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      transition: transform .22s var(--ease), opacity .22s var(--ease);
+      display:flex; align-items:center; gap:10px;
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(0)}
+    .toast .t-dot{width:9px; height:9px; border-radius:99px; background: var(--green)}
+
+    /* responsive */
+    @media (max-width: 920px){
+      .hero-card{grid-template-columns: 1fr; min-height: unset}
+      .hero-right{padding: 18px 0 6px}
+      .orb{width: 280px; height: 280px}
+      .grid{grid-template-columns: repeat(6, 1fr)}
+      .card{grid-column: span 6}
+      .row{grid-template-columns: 1fr}
+      .modal-grid{grid-template-columns: 1fr}
+      .modal-left{border-right:0; border-bottom:1px solid var(--stroke2)}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="container">
+      <div class="topbar-inner">
+        <div class="brand" id="goHome" tabindex="0" title="На головну">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>Kyiv M1 Reborn</strong>
+            <span>Official Portal</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Навігація">
+          <a href="#home" data-route="home" class="active">Головна</a>
+          <a href="#news" data-route="news">Новини</a>
+          <a href="#shop" data-route="shop">Магазин</a>
+          <a href="#about" data-route="about">Про гру</a>
+        </nav>
+
+        <div class="actions">
+          <div class="chip" id="serverChip" title="Клікни — статус/копіювання IP">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span class="dot"></span>
+              <span id="serverText">Server: Online</span>
+            </span>
+          </div>
+
+          <button class="btn secondary" id="profileBtn">Профіль</button>
+          <button class="btn" id="playBtn">Грати</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="t-dot"></span>
+    <span id="toastText">OK</span>
+  </div>
+
+  <!-- PAGES -->
+  <main class="container">
+
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-card" id="heroCard">
+          <div class="leaf"></div><div class="leaf"></div><div class="leaf"></div>
+
+          <div class="hero-left">
+            <div class="kicker" id="kicker">
+              <span class="dot blue"></span>
+              <span>New season • Events • Ranked</span>
+            </div>
+
+            <h1 id="heroTitle">Ласкаво просимо в <span style="color:var(--lime)">Kyiv M1 Reborn</span></h1>
+            <div class="sub">
+              Портал для гравців: новини, магазин, профіль, бонуси, промокоди та швидкий запуск.
+              Вхід — <b>лише після створення акаунта</b>.
+            </div>
+
+            <div class="hero-cta">
+              <button class="btn" id="joinBtn">Створити акаунт</button>
+              <button class="btn secondary" id="howBtn">Як почати</button>
+              <button class="btn secondary" id="promoBtn">Ввести промокод</button>
+            </div>
+
+            <div class="meta-row">
+              <div class="pill" id="pill1"><span class="dot"></span> Щоденні нагороди</div>
+              <div class="pill" id="pill2"><span class="dot orange"></span> Івенти щотижня</div>
+              <div class="pill" id="pill3"><span class="dot blue"></span> Профіль і статистика</div>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="orb" id="orb" title="Клік — анімація + швидкі дії">
+              <div class="orb-inner">
+                <div class="badge">
+                  <strong>Start Game</strong>
+                  <span>Launch / Connect / Profile</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="section">
+        <div style="display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div>
+            <div style="color:var(--muted);font-size:12px">Клікни на будь-яку карточку — все має натискатися</div>
+            <h2 style="margin:6px 0 0;font-size:18px">Швидкі розділи</h2>
+          </div>
+          <button class="btn secondary" id="testClicksBtn">Тест кліків</button>
+        </div>
+
+        <div class="grid">
+          <div class="card" data-action="route" data-route="news">
+            <div class="shine"></div>
+            <h3>Новини та оновлення</h3>
+            <p>Патчноути, фікси, нові режими, бан/правила.</p>
+            <div class="tag"><span class="dot blue"></span> Перейти</div>
+          </div>
+
+          <div class="card" data-action="route" data-route="shop">
+            <div class="shine"></div>
+            <h3>Магазин</h3>
+            <p>Скіни, VIP, донат-пакети, промокоди, бонуси.</p>
+            <div class="tag"><span class="dot"></span> Перейти</div>
+          </div>
+
+          <div class="card" data-action="profile">
+            <div class="shine"></div>
+            <h3>Профіль</h3>
+            <p>Нік, рівень, валюта, історія покупок, налаштування.</p>
+            <div class="tag"><span class="dot orange"></span> Відкрити</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWS -->
+    <section class="page" id="page-news">
+      <div class="section">
+        <h2 style="margin:16px 0 6px;font-size:18px">Новини</h2>
+        <div style="color:var(--muted);font-size:13px;line-height:1.6">
+          Тут шаблон. Ти потім підставиш реальні новини з API/бекенду.
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <div class="card" data-action="toast" data-text="Відкрив новину #1 (демо)">
+            <div class="shine"></div>
+            <h3>Update 1.4 — нові місії</h3>
+            <p>Додано 12 місій, ребаланс економіки, оптимізація FPS.</p>
+            <div class="tag"><span class="dot"></span> Читати</div>
+          </div>
+          <div class="card" data-action="toast" data-text="Відкрив новину #2 (демо)">
+            <div class="shine"></div>
+            <h3>Event Weekend</h3>
+            <p>x2 нагороди + обмежені предмети в магазині.</p>
+            <div class="tag"><span class="dot orange"></span> Читати</div>
+          </div>
+          <div class="card" data-action="toast" data-text="Відкрив новину #3 (демо)">
+            <div class="shine"></div>
+            <h3>Античит / правила</h3>
+            <p>Оновлені правила, нові авто-детекти, апеляції.</p>
+            <div class="tag"><span class="dot blue"></span> Читати</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP -->
+    <section class="page" id="page-shop">
+      <div class="section">
+        <h2 style="margin:16px 0 6px;font-size:18px">Магазин</h2>
+        <div style="color:var(--muted);font-size:13px;line-height:1.6">
+          Демо-магазин: “купівля” просто змінює баланс у localStorage.
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <div class="card" data-action="buy" data-item="VIP 7 days" data-cost="120">
+            <div class="shine"></div>
+            <h3>VIP 7 days</h3>
+            <p>Бонуси до досвіду, особливий чат-тег, дрібні плюшки.</p>
+            <div class="tag"><span class="dot"></span> 120 coins</div>
+          </div>
+          <div class="card" data-action="buy" data-item="Skin Pack" data-cost="80">
+            <div class="shine"></div>
+            <h3>Skin Pack</h3>
+            <p>Набір косметики (демо). Потім підключиш реальні SKU.</p>
+            <div class="tag"><span class="dot orange"></span> 80 coins</div>
+          </div>
+          <div class="card" data-action="buy" data-item="Booster x2 (24h)" data-cost="60">
+            <div class="shine"></div>
+            <h3>Booster x2 (24h)</h3>
+            <p>Подвоєння нагород на 24 години.</p>
+            <div class="tag"><span class="dot blue"></span> 60 coins</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="page" id="page-about">
+      <div class="section">
+        <h2 style="margin:16px 0 6px;font-size:18px">Про гру</h2>
+        <div style="color:var(--muted);font-size:13px;line-height:1.7;max-width:80ch">
+          Kyiv M1 Reborn — портал-обгортка: лендінг, новини, магазин, профіль, промокоди.
+          Для реального продакшену: додаси бекенд (Firebase/Node/PHP), нормальний JWT/сесії та базу даних.
+        </div>
+
+        <div class="grid" style="margin-top:14px">
+          <div class="card" data-action="toast" data-text="Скопійовано: discord.gg/your-link (демо)">
+            <div class="shine"></div>
+            <h3>Discord</h3>
+            <p>Ком’юніті, апдейти, підтримка, набори в клан.</p>
+            <div class="tag"><span class="dot"></span> Copy</div>
+          </div>
+          <div class="card" data-action="toast" data-text="Скопійовано: 123.45.67.89:7777 (демо IP)">
+            <div class="shine"></div>
+            <h3>Server IP</h3>
+            <p>Швидке підключення (демо). Підстав реальний.</p>
+            <div class="tag"><span class="dot blue"></span> Copy</div>
+          </div>
+          <div class="card" data-action="toast" data-text="Відкрив правила (демо)">
+            <div class="shine"></div>
+            <h3>Правила</h3>
+            <p>Бан-лист, апеляції, заборонені моди, токсик.</p>
+            <div class="tag"><span class="dot orange"></span> Open</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASH -->
+    <section class="page" id="page-dash">
+      <div class="dash">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <strong id="dashTitle">Панель гравця</strong>
+              <div style="color:var(--muted);font-size:12px;margin-top:3px" id="dashSubtitle">—</div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <div class="chip" id="coinsChip" title="Клік — додати демо монети">
+                <span class="dot"></span>
+                <span id="coinsText">Coins: 0</span>
+              </div>
+              <button class="btn secondary" id="logoutBtn">Вийти</button>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="row">
+              <div class="box">
+                <h4>Активність</h4>
+                <div class="list">
+                  <div class="item" data-action="toast" data-text="Daily reward отримано (демо)">
+                    <div>
+                      <div>Daily Reward</div>
+                      <small>Клікни — отримати бонус</small>
+                    </div>
+                    <span class="kbd">GET</span>
+                  </div>
+                  <div class="item" data-action="toast" data-text="Завдання додано в трекер (демо)">
+                    <div>
+                      <div>Quest Tracker</div>
+                      <small>Плануй, що робити в грі</small>
+                    </div>
+                    <span class="kbd">ADD</span>
+                  </div>
+                  <div class="item" data-action="toast" data-text="Налаштування збережено (демо)">
+                    <div>
+                      <div>Settings</div>
+                      <small>Графіка / керування / звук</small>
+                    </div>
+                    <span class="kbd">SAVE</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="box">
+                <h4>Профіль</h4>
+                <div class="list">
+                  <div class="item" id="copyNick">
+                    <div>
+                      <div>Nickname</div>
+                      <small id="nickLine">—</small>
+                    </div>
+                    <span class="kbd">COPY</span>
+                  </div>
+                  <div class="item" data-action="toast" data-text="Промокод активовано (демо)">
+                    <div>
+                      <div>Promo</div>
+                      <small>Активуй бонус-код</small>
+                    </div>
+                    <span class="kbd">USE</span>
+                  </div>
+                  <div class="item" data-action="toast" data-text="Support ticket створено (демо)">
+                    <div>
+                      <div>Support</div>
+                      <small>Звернення до адмінів</small>
+                    </div>
+                    <span class="kbd">NEW</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap">
+              <button class="btn" id="dashPlayBtn">Запустити гру</button>
+              <button class="btn secondary" id="dashShopBtn">Відкрити магазин</button>
+              <button class="btn secondary" id="dashNewsBtn">Останні новини</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="height:24px"></div>
+  </main>
+
+  <!-- AUTH MODAL -->
+  <div class="backdrop" id="authBackdrop" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Auth">
+      <div class="modal-grid">
+        <div class="modal-left">
+          <div class="brand" style="gap:10px; margin-bottom:10px" tabindex="0">
+            <div class="logo" aria-hidden="true"></div>
+            <div>
+              <strong>Kyiv M1 Reborn</strong>
+              <span>Account required</span>
+            </div>
+          </div>
+          <h2>Перед входом — акаунт</h2>
+          <p>
+            Це прототип. Дані зберігаються локально (localStorage).
+            Для реального проєкту заміниш на бекенд + базу.
+          </p>
+
+          <div class="features">
+            <div class="feat" data-action="toast" data-text="Feature: Daily rewards (демо)">
+              <div class="icon">★</div>
+              <div><b>Daily Rewards</b><span>Щоденні нагороди та streak</span></div>
+            </div>
+            <div class="feat" data-action="toast" data-text="Feature: Shop & inventory (демо)">
+              <div class="icon">⛃</div>
+              <div><b>Shop + Inventory</b><span>Покупки, баланс, історія</span></div>
+            </div>
+            <div class="feat" data-action="toast" data-text="Feature: Profile & stats (демо)">
+              <div class="icon">⌁</div>
+              <div><b>Profile & Stats</b><span>Нік, рівень, статуси</span></div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" class="help">
+            Порада: пароль тут лише “для вигляду”. Не використовуй реальний пароль — це фронт без шифрування.
+          </div>
+        </div>
+
+        <div class="modal-right">
+          <div class="tabs">
+            <button class="tab active" id="tabLogin">Вхід</button>
+            <button class="tab" id="tabRegister">Реєстрація</button>
+          </div>
+
+          <div class="danger" id="authError"></div>
+
+          <form class="form" id="loginForm">
+            <div class="field">
+              <label>Nickname</label>
+              <input id="loginNick" autocomplete="username" placeholder="Напр. M1_Player" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input id="loginPass" type="password" autocomplete="current-password" placeholder="Будь-який (демо)" />
+            </div>
+            <div class="rowbtn">
+              <button class="btn" type="submit">Увійти</button>
+              <button class="btn secondary" type="button" id="closeAuth">Закрити</button>
+            </div>
+          </form>
+
+          <form class="form" id="registerForm" style="display:none">
+            <div class="field">
+              <label>Nickname</label>
+              <input id="regNick" autocomplete="username" placeholder="Унікальний нік" />
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input id="regPass" type="password" autocomplete="new-password" placeholder="Будь-який (демо)" />
+            </div>
+            <div class="field">
+              <label>Confirm</label>
+              <input id="regPass2" type="password" autocomplete="new-password" placeholder="Повтори" />
+            </div>
+            <div class="rowbtn">
+              <button class="btn" type="submit">Створити</button>
+              <button class="btn secondary" type="button" id="closeAuth2">Закрити</button>
+            </div>
+          </form>
+
+          <div class="help" style="margin-top:12px">
+            Натискається все: таби, кнопки, карточки, статус сервера, баланс.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- tiny helpers ----------
+    const $ = (q, el=document) => el.querySelector(q);
+    const $$ = (q, el=document) => [...el.querySelectorAll(q)];
+
+    function toast(msg){
+      const t = $("#toast");
+      $("#toastText").textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>t.classList.remove("show"), 1600);
+    }
+
+    function copy(text){
+      navigator.clipboard?.writeText(text).then(
+        ()=>toast("Скопійовано: " + text),
+        ()=>toast("Clipboard недоступний")
+      );
+    }
+
+    // ---------- "DB" in localStorage ----------
+    const LS_USERS = "km1_users_v1";
+    const LS_SESSION = "km1_session_v1";
+
+    function loadUsers(){
+      try{ return JSON.parse(localStorage.getItem(LS_USERS) || "[]"); }
+      catch{ return []; }
+    }
+    function saveUsers(users){
+      localStorage.setItem(LS_USERS, JSON.stringify(users));
+    }
+    function getSession(){
+      try{ return JSON.parse(localStorage.getItem(LS_SESSION) || "null"); }
+      catch{ return null; }
+    }
+    function setSession(sess){
+      localStorage.setItem(LS_SESSION, JSON.stringify(sess));
+    }
+    function clearSession(){
+      localStorage.removeItem(LS_SESSION);
+    }
+
+    function ensureUserDefaults(user){
+      // demo fields
+      if (typeof user.coins !== "number") user.coins = 150; // стартові
+      if (!user.createdAt) user.createdAt = Date.now();
+      if (!user.level) user.level = 1;
+      return user;
+    }
+
+    // ---------- routing ----------
+    const routes = ["home","news","shop","about","dash"];
+    function showRoute(route){
+      routes.forEach(r=>{
+        $("#page-" + r).classList.toggle("active", r === route);
+      });
+      $$(".nav a").forEach(a=>{
+        a.classList.toggle("active", a.dataset.route === route);
+      });
+      // update hash but avoid messing scroll
+      history.replaceState(null, "", "#" + route);
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function requireAuthThen(go){
+      const sess = getSession();
+      if (!sess || !sess.nick){
+        openAuth("register");
+        toast("Спершу створіть акаунт");
+        return;
+      }
+      go();
+    }
+
+    // ---------- auth modal ----------
+    const backdrop = $("#authBackdrop");
+    const errBox = $("#authError");
+
+    function openAuth(mode="login"){
+      backdrop.classList.add("show");
+      backdrop.setAttribute("aria-hidden","false");
+      setAuthTab(mode);
+      setTimeout(()=>$("#" + (mode==="login" ? "loginNick":"regNick")).focus(), 50);
+    }
+    function closeAuth(){
+      backdrop.classList.remove("show");
+      backdrop.setAttribute("aria-hidden","true");
+      hideError();
+    }
+    function showError(msg){
+      errBox.textContent = msg;
+      errBox.classList.add("show");
+    }
+    function hideError(){
+      errBox.textContent = "";
+      errBox.classList.remove("show");
+    }
+    function setAuthTab(which){
+      const isLogin = which === "login";
+      $("#tabLogin").classList.toggle("active", isLogin);
+      $("#tabRegister").classList.toggle("active", !isLogin);
+      $("#loginForm").style.display = isLogin ? "flex" : "none";
+      $("#registerForm").style.display = !isLogin ? "flex" : "none";
+      hideError();
+    }
+
+    $("#tabLogin").addEventListener("click", ()=>setAuthTab("login"));
+    $("#tabRegister").addEventListener("click", ()=>setAuthTab("register"));
+    $("#closeAuth").addEventListener("click", closeAuth);
+    $("#closeAuth2").addEventListener("click", closeAuth);
+    backdrop.addEventListener("click", (e)=>{ if(e.target === backdrop) closeAuth(); });
+    document.addEventListener("keydown", (e)=>{ if(e.key === "Escape") closeAuth(); });
+
+    // ---------- register ----------
+    $("#registerForm").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      hideError();
+
+      const nick = $("#regNick").value.trim();
+      const pass = $("#regPass").value;
+      const pass2 = $("#regPass2").value;
+
+      if (nick.length < 3) return showError("Нік має бути мінімум 3 символи.");
+      if (pass.length < 3) return showError("Пароль (демо) — мінімум 3 символи.");
+      if (pass !== pass2) return showError("Паролі не співпадають.");
+
+      const users = loadUsers();
+      if (users.some(u => u.nick.toLowerCase() === nick.toLowerCase()))
+        return showError("Такий нік уже зайнятий.");
+
+      const user = ensureUserDefaults({ nick, pass });
+      users.push(user);
+      saveUsers(users);
+
+      setSession({ nick: user.nick, loginAt: Date.now() });
+      toast("Акаунт створено ✅");
+      closeAuth();
+      syncUI();
+      showRoute("dash");
+    });
+
+    // ---------- login ----------
+    $("#loginForm").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      hideError();
+
+      const nick = $("#loginNick").value.trim();
+      const pass = $("#loginPass").value;
+
+      const users = loadUsers();
+      const found = users.find(u => u.nick.toLowerCase() === nick.toLowerCase());
+
+      if (!found) return showError("Користувача не знайдено. Зареєструйся.");
+      if (found.pass !== pass) return showError("Невірний пароль (демо).");
+
+      setSession({ nick: found.nick, loginAt: Date.now() });
+      toast("Вхід успішний ✅");
+      closeAuth();
+      syncUI();
+      showRoute("dash");
+    });
+
+    // ---------- UI sync ----------
+    function getCurrentUser(){
+      const sess = getSession();
+      if (!sess?.nick) return null;
+      const users = loadUsers();
+      const u = users.find(x => x.nick.toLowerCase() === sess.nick.toLowerCase());
+      return u ? ensureUserDefaults(u) : null;
+    }
+    function saveCurrentUser(u){
+      const users = loadUsers();
+      const idx = users.findIndex(x => x.nick.toLowerCase() === u.nick.toLowerCase());
+      if (idx >= 0) users[idx] = u;
+      saveUsers(users);
+    }
+
+    function syncUI(){
+      const u = getCurrentUser();
+      const logged = !!u;
+
+      $("#profileBtn").textContent = logged ? "Панель" : "Профіль";
+      $("#dashSubtitle").textContent = logged
+        ? ("Вітаю, " + u.nick + " • Level " + u.level + " • Member since " + new Date(u.createdAt).toLocaleDateString())
+        : "—";
+
+      $("#nickLine").textContent = logged ? u.nick : "—";
+      $("#coinsText").textContent = "Coins: " + (logged ? u.coins : 0);
+
+      // title
+      $("#dashTitle").textContent = logged ? ("Панель гравця — " + u.nick) : "Панель гравця";
+    }
+
+    // ---------- click actions ----------
+    // navbar routes
+    $$(".nav a").forEach(a=>{
+      a.addEventListener("click",(e)=>{
+        e.preventDefault();
+        const r = a.dataset.route;
+        if (r === "shop" || r === "news") {
+          // allow viewing without auth, but some actions require auth
+          showRoute(r);
+          toast("Відкрито: " + (r==="shop"?"Магазин":"Новини"));
+          return;
+        }
+        showRoute(r);
+      });
+    });
+
+    $("#goHome").addEventListener("click", ()=>showRoute("home"));
+
+    // buttons
+    $("#playBtn").addEventListener("click", ()=>{
+      requireAuthThen(()=>{
+        toast("Launch (демо) — підставиш свій лаунчер/посилання");
+      });
+    });
+
+    $("#profileBtn").addEventListener("click", ()=>{
+      requireAuthThen(()=>showRoute("dash"));
+    });
+
+    $("#joinBtn").addEventListener("click", ()=>openAuth("register"));
+    $("#howBtn").addEventListener("click", ()=>{
+      toast("1) Реєстрація  2) Панель  3) Запуск гри (демо)");
+    });
+    $("#promoBtn").addEventListener("click", ()=>{
+      requireAuthThen(()=>{
+        const code = prompt("Введи промокод (демо):");
+        if(!code) return toast("Скасовано");
+        toast("Промокод '" + code + "' активовано (демо)");
+        const u = getCurrentUser();
+        u.coins += 25;
+        saveCurrentUser(u);
+        syncUI();
+      });
+    });
+
+    // hero orb
+    $("#orb").addEventListener("click", ()=>{
+      $("#orb").animate(
+        [{ transform:"translateY(0) rotate(-2deg) scale(1)" },
+         { transform:"translateY(-6px) rotate(4deg) scale(1.03)" },
+         { transform:"translateY(0) rotate(-2deg) scale(1)" }],
+        { duration: 520, easing: "cubic-bezier(.2,.9,.2,1)" }
+      );
+      toast("Orb action ✅");
+    });
+
+    // pills
+    $("#pill1").addEventListener("click", ()=>toast("Daily rewards: активні (демо)"));
+    $("#pill2").addEventListener("click", ()=>toast("Events: календар (демо)"));
+    $("#pill3").addEventListener("click", ()=>toast("Stats: профіль (демо)"));
+
+    // server chip copy demo ip
+    $("#serverChip").addEventListener("click", ()=>{
+      copy("123.45.67.89:7777");
+    });
+
+    // cards with data-action
+    $$(".card, .feat, .item").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const action = el.dataset.action;
+        if (!action) return;
+
+        if (action === "route"){
+          showRoute(el.dataset.route);
+          toast("Відкрито: " + el.dataset.route);
+        }
+        if (action === "profile"){
+          requireAuthThen(()=>showRoute("dash"));
+        }
+        if (action === "toast"){
+          toast(el.dataset.text || "OK");
+        }
+        if (action === "buy"){
+          requireAuthThen(()=>{
+            const item = el.dataset.item;
+            const cost = Number(el.dataset.cost || 0);
+            const u = getCurrentUser();
+            if (u.coins < cost) return toast("Недостатньо coins");
+            u.coins -= cost;
+            saveCurrentUser(u);
+            syncUI();
+            toast("Куплено: " + item + " (-" + cost + ")");
+          });
+        }
+      });
+    });
+
+    // dashboard controls
+    $("#logoutBtn").addEventListener("click", ()=>{
+      clearSession();
+      toast("Вихід ✅");
+      syncUI();
+      showRoute("home");
+    });
+
+    $("#coinsChip").addEventListener("click", ()=>{
+      requireAuthThen(()=>{
+        const u = getCurrentUser();
+        u.coins += 50;
+        saveCurrentUser(u);
+        syncUI();
+        toast("+50 coins (демо)");
+      });
+    });
+
+    $("#copyNick").addEventListener("click", ()=>{
+      const u = getCurrentUser();
+      if (!u) return openAuth("login");
+      copy(u.nick);
+    });
+
+    $("#dashPlayBtn").addEventListener("click", ()=>{
+      requireAuthThen(()=>toast("Запуск гри (демо)"));
+    });
+    $("#dashShopBtn").addEventListener("click", ()=>{
+      showRoute("shop"); toast("Магазин відкрито");
+    });
+    $("#dashNewsBtn").addEventListener("click", ()=>{
+      showRoute("news"); toast("Новини відкрито");
+    });
+
+    // test clicks
+    $("#testClicksBtn").addEventListener("click", ()=>{
+      // highlight clickable nodes quickly
+      const clickable = [...$$("button, a, .card, .chip, .pill, .feat, .item, .orb")];
+      clickable.forEach((el, i)=>{
+        el.animate(
+          [{ outline:"0px solid rgba(99,211,93,0)", transform:"translateY(0)" },
+           { outline:"2px solid rgba(99,211,93,.45)", transform:"translateY(-2px)" },
+           { outline:"0px solid rgba(99,211,93,0)", transform:"translateY(0)" }],
+          { duration: 520, delay: i*12, easing: "cubic-bezier(.2,.9,.2,1)" }
+        );
+      });
+      toast("Підсвічено все клікабельне ✅");
+    });
+
+    // ---------- guard: open auth when needed ----------
+    // open profile / play from hero card clicks too
+    $("#heroCard").addEventListener("dblclick", ()=>{
+      requireAuthThen(()=>showRoute("dash"));
+    });
+
+    // ---------- init ----------
+    function init(){
+      // handle hash route
+      const h = (location.hash || "#home").replace("#","");
+      if (routes.includes(h)) showRoute(h);
+
+      // if user goes to dash without auth
+      if (h === "dash" && !getSession()?.nick){
+        showRoute("home");
+        openAuth("register");
+      }
+
+      syncUI();
+
+      // subtle title animation
+      $("#heroTitle").animate(
+        [{ transform:"translateY(8px)", opacity:0.0 },
+         { transform:"translateY(0)", opacity:1.0 }],
+        { duration: 560, easing: "cubic-bezier(.2,.9,.2,1)" }
+      );
+
+      // clickable brand accessibility
+      $("#goHome").addEventListener("keydown",(e)=>{
+        if(e.key==="Enter" || e.key===" ") showRoute("home");
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
