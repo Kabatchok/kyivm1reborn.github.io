@@ -1,1 +1,192 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kyiv M1 Reborn</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{background:#0f0f0f;color:white;overflow-x:hidden;}
 
+.hidden{display:none;}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.green{background:#39ff14;color:black;}
+.green:hover{transform:scale(1.1);box-shadow:0 0 20px #39ff14;}
+
+section{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;}
+
+h1{font-size:60px;letter-spacing:4px;margin-bottom:20px;}
+p{opacity:0.7;margin-bottom:30px;}
+
+.hero{
+background:radial-gradient(circle at right,#39ff1440,#000 60%);
+animation:fadeIn 1.5s ease;
+}
+
+.card{
+background:#1a1a1a;
+padding:40px;
+border-radius:20px;
+box-shadow:0 0 30px #000;
+animation:slideUp 1s ease;
+}
+
+input{
+padding:12px;
+width:250px;
+margin:10px 0;
+border-radius:10px;
+border:none;
+}
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+padding:20px;
+display:flex;
+justify-content:space-between;
+background:rgba(0,0,0,0.8);
+backdrop-filter:blur(10px);
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin:0 15px;
+cursor:pointer;
+}
+
+nav a:hover{color:#39ff14;}
+
+@keyframes fadeIn{
+from{opacity:0;} to{opacity:1;}
+}
+
+@keyframes slideUp{
+from{transform:translateY(50px);opacity:0;}
+to{transform:translateY(0);opacity:1;}
+}
+
+.modal{
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:rgba(0,0,0,0.8);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.modal-content{
+background:#1a1a1a;
+padding:40px;
+border-radius:20px;
+text-align:center;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="auth">
+<div class="card">
+<h2>Вхід / Реєстрація</h2>
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+<br>
+<button class="green" onclick="register()">Зареєструватися</button>
+<button onclick="login()">Увійти</button>
+</div>
+</section>
+
+<!-- MAIN SITE -->
+<div id="site" class="hidden">
+
+<nav>
+<div><b>Kyiv M1 Reborn</b></div>
+<div>
+<a onclick="scrollToSection('home')">Головна</a>
+<a onclick="scrollToSection('about')">Про проєкт</a>
+<a onclick="openModal()">Замовити</a>
+<a onclick="logout()">Вийти</a>
+</div>
+</nav>
+
+<section id="home" class="hero">
+<h1>KYIV M1 REBORN</h1>
+<p>Legacy. Power. Reborn.</p>
+<button class="green" onclick="openModal()">Замовити зараз</button>
+</section>
+
+<section id="about">
+<h1>Про Проєкт</h1>
+<p>Реставрація легенди. Нове життя культового авто.</p>
+</section>
+
+</div>
+
+<!-- MODAL -->
+<div id="orderModal" class="modal hidden">
+<div class="modal-content">
+<h2>Замовлення</h2>
+<p>Ваш запит прийнято 🚀</p>
+<button class="green" onclick="closeModal()">Закрити</button>
+</div>
+</div>
+
+<script>
+function register(){
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
+
+if(user && pass){
+localStorage.setItem("user",user);
+localStorage.setItem("pass",pass);
+alert("Акаунт створено!");
+}else{
+alert("Заповни всі поля");
+}
+}
+
+function login(){
+let user=document.getElementById("username").value;
+let pass=document.getElementById("password").value;
+
+if(user===localStorage.getItem("user") && pass===localStorage.getItem("pass")){
+document.getElementById("auth").classList.add("hidden");
+document.getElementById("site").classList.remove("hidden");
+}else{
+alert("Невірний логін або пароль");
+}
+}
+
+function logout(){
+location.reload();
+}
+
+function scrollToSection(id){
+document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+function openModal(){
+document.getElementById("orderModal").classList.remove("hidden");
+}
+
+function closeModal(){
+document.getElementById("orderModal").classList.add("hidden");
+}
+</script>
+
+</body>
+</html>
